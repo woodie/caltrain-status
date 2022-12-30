@@ -18,3 +18,5 @@ In a separate shell, send requests to this function using curl.
 ```
 curl http://localhost:8080
 ```
+
+Note: We may be better off going to [the source](https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2).
