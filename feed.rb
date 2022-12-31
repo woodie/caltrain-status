@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
+require 'time'
 require 'json'
 require 'typhoeus'
 
 def status_list
+  time_now = Time.now
   bearer_token = ENV["BEARER_TOKEN"]
   endpoint_url = "https://api.twitter.com/2/users/919284817/tweets"
   options = { method: 'get',
@@ -15,7 +17,8 @@ def status_list
 
   response = {updates: []} 
   JSON.parse(resp.body)['data'].each do |row|
-    response[:updates] << {time: row['created_at'], text: row['text']}
+    mins = (time_now - Time.parse(row['created_at'])).to_i
+    response[:updates] << {mins: mins, time: row['created_at'], text: row['text']}
   end
   response
 end
