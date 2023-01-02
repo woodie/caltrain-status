@@ -1,15 +1,24 @@
 # Caltrain status as a JSON feed
 
-Caltrain published status from Twitter on their website.
+Caltrain published status from Twitter on [their website](https://www.caltrain.com/alerts?active_tab=service_alerts_tab).
 It would be much more useful as a JSON. Let's fix that.
 
-We'll set this up with Functions Framework for Ruby.
-https://github.com/GoogleCloudPlatform/functions-framework-ruby
+We set this up with [Functions Framework for Ruby](https://github.com/GoogleCloudPlatform/functions-framework-ruby).
+
+The feed is published [here](https://us-central1-next-caltrain-pwa.cloudfunctions.net/status).
 
 ## Local development
 
+Create a files called `env.sh` to set the `BEARER_TOKEN`.
+```bash
+#!/bin/bash
+
+export BEARER_TOKEN=NOT_SHOWN
+```
+
 Install the bundle, and start the framework.
 ```
+source env.sh
 bundle install
 bundle exec functions-framework-ruby --target status
 ```
@@ -19,7 +28,7 @@ In a separate shell, send requests to this function using curl.
 curl http://localhost:8080
 ```
 
-We should go to [the source](https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2).
+## Secret management
 
-With the approach, we'll need to [use secrets](https://cloud.google.com/functions/docs/configuring/secrets#console) and use the
+We need to [set up secrets](https://cloud.google.com/functions/docs/configuring/secrets#console) and use the
 [Secret Manager client libraries](https://cloud.google.com/secret-manager/docs/reference/libraries#client-libraries-install-ruby).
