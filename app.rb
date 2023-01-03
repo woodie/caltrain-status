@@ -1,21 +1,23 @@
 require 'time'
 require 'json'
-require 'httparty'
+require 'net/http'
+require "functions_framework"
 
 FunctionsFramework.http("status") do |request|
   time_now = Time.now
   bearer_token = ENV["BEARER_TOKEN"]
-  query = { "max_results" => 9, "tweet.fields" => "created_at" }
+  params = { "max_results" => 9, "tweet.fields" => "created_at" }
   headers = { "Authorization" => "Bearer #{bearer_token}" }
-  endpoint_url = "https://api.twitter.com/2/users/919284817/tweets"
+  uri = URI("https://api.twitter.com/2/users/919284817/tweets")
 
-  resp = HTTParty.get(endpoint_url, query: query, headers: headers)
-  return 421 if resp.code != 200
+  uri.query = URI.encode_www_form(params)
+  response = Net::HTTP.get_response(uri, headers)
+  return 421 unless response.is_a?(Net::HTTPSuccess)
 
-  response = {updates: []}
-  JSON.parse(resp.body)['data'].each do |row|
+  payload = {updates: []}
+  JSON.parse(response.body)['data'].each do |row|
     mins = (time_now - Time.parse(row['created_at'])).to_i / 60
-    response[:updates] << {mins: mins, time: row['created_at'], text: row['text']}
+    payload[:updates] << {mins: mins, time: row['created_at'], text: row['text']}
   end
-  response
+  payload
 end

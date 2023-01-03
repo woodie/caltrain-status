@@ -9,7 +9,7 @@ The feed is published [here](https://us-central1-next-caltrain-pwa.cloudfunction
 
 ## Local development
 
-Create a files called `env.sh` to set the `BEARER_TOKEN`.
+Create `env.sh` file to set the `BEARER_TOKEN`.
 ```bash
 #!/bin/bash
 
@@ -18,14 +18,15 @@ export BEARER_TOKEN=NOT_SHOWN
 
 Install the bundle, and start the framework.
 ```
-source env.sh
 bundle install
+
+source env.sh
 bundle exec functions-framework-ruby --target status
 ```
 
 In a separate shell, send requests to this function using curl.
 ```
-curl http://localhost:8080
+curl http://localhost:8080 | jq
 ```
 
 ## Secret management
