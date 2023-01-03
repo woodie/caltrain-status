@@ -8,8 +8,8 @@ URL = 'https://www.caltrain.com/alerts?active_tab=service_alerts_tab'
 FunctionsFramework.http("status") do |request|
   begin
     html = URI.open(URL)
-  rescue OpenURI::HTTPError => error
-    return 404
+  rescue OpenURI::HTTPError => err
+    return [500, {}, ["Something went wrong: #{err.message}."]]
   end
   document = Nokogiri::HTML.parse(html)
 

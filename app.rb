@@ -12,7 +12,7 @@ FunctionsFramework.http("status") do |request|
 
   uri.query = URI.encode_www_form(params)
   response = Net::HTTP.get_response(uri, headers)
-  return 421 unless response.is_a?(Net::HTTPSuccess)
+  return [500, {}, ["Something went wrong."]] unless response.is_a?(Net::HTTPSuccess)
 
   payload = {updates: []}
   JSON.parse(response.body)['data'].each do |row|
