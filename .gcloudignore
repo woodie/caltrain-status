@@ -1,0 +1,10 @@
+# This file specifies files that are *not* uploaded to Google Cloud using gcloud.
+.gcloudignore
+.git
+.gitignore
+.ruby-version
+
+LICENSE
+README.md
+deploy.sh
+env.sh
