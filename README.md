@@ -11,7 +11,6 @@ See [Writing Functions](https://github.com/GoogleCloudPlatform/functions-framewo
 Create `env.sh` file to set the `BEARER_TOKEN`.
 ```bash
 #!/bin/bash
-
 export BEARER_TOKEN=NOT_SHOWN
 ```
 
@@ -26,6 +25,11 @@ bundle exec functions-framework-ruby --target status
 In a separate shell, send requests to this function using curl.
 ```
 curl http://localhost:8080 | jq
+```
+
+## Run tests
+```
+bundle exec rspec -fd
 ```
 
 ## Secret management

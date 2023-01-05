@@ -2,9 +2,12 @@
 .gcloudignore
 .git
 .gitignore
+.rspec
 .ruby-version
 
 LICENSE
 README.md
 deploy.sh
 env.sh
+spec/*
+*.swp

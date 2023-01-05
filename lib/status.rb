@@ -3,10 +3,6 @@ require "json"
 require "net/http"
 
 class Status
-  def initialize bearer_token
-    @bearer_token = bearer_token
-  end
-
   OPTS_HEADERS = {
     "Access-Control-Allow-Origin" => "*",
     "Access-Control-Allow-Methods" => "GET",
@@ -14,27 +10,34 @@ class Status
     "Access-Control-Max-Age" => "3600"
   }
 
-  CORS_HEADERS = {
+  RESP_HEADERS = {
     "Access-Control-Allow-Origin" => "*",
     "Content-type" => "application/json; charset=utf-8"
   }
+
+  def initialize(bearer_token = "")
+    @bearer_token = bearer_token
+  end
 
   def message(train_id)
     @response ||= status_tweets
     return @response = nil unless @response.is_a?(Net::HTTPSuccess)
 
+    fallback = ""
+    combo = train_id.to_i.even? ? "SB#{train_id}" : "NB#{train_id}"
     JSON.parse(@response.body)["data"].each do |row|
       return "" if (Time.now - Time.parse(row["created_at"])).to_i > 30000
 
-      fallback = ""
       parts = row["text"].split
-      if parts.size > 1 && parts[0] == "Train" && parts[1] == train_id
-        return row["text"]
-      elsif fallback.empty? && parts[0] != "Train"
-        return row["text"]
+      if parts.size > 1 && parts[0].size > 1
+        if (parts[0] == combo) || (parts[0] == "Train" && parts[1] == train_id)
+          return row["text"]
+        elsif fallback.empty? && parts[0][1] != "B" && parts[0] != "Train"
+          fallback = row["text"]
+        end
       end
     end
-    ""
+    fallback
   end
 
   private

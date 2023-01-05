@@ -3,6 +3,7 @@ GEM
   specs:
     ast (2.4.2)
     cloud_events (0.7.0)
+    diff-lcs (1.5.0)
     functions_framework (1.2.0)
       cloud_events (>= 0.7.0, < 2.a)
       puma (>= 4.3.0, < 6.a)
@@ -19,6 +20,19 @@ GEM
     rainbow (3.1.1)
     regexp_parser (2.6.1)
     rexml (3.2.5)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-core (3.12.0)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-support (3.12.0)
     rubocop (1.42.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -46,6 +60,7 @@ PLATFORMS
 
 DEPENDENCIES
   functions_framework (~> 1.0)
+  rspec
   standard
 
 BUNDLED WITH
