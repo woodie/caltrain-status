@@ -1,11 +1,10 @@
 # Caltrain status as a JSON feed
 
 Caltrain published status from Twitter on [their website](https://www.caltrain.com/alerts?active_tab=service_alerts_tab).
-It would be much more useful as a JSON. Let's fix that.
+It would be much more useful as a JSON. We published our JSON status [here](https://us-central1-next-caltrain-pwa.cloudfunctions.net/status).
 
 We set this up with [Functions Framework for Ruby](https://github.com/GoogleCloudPlatform/functions-framework-ruby).
-
-The feed is published [here](https://us-central1-next-caltrain-pwa.cloudfunctions.net/status).
+See [Writing Functions](https://github.com/GoogleCloudPlatform/functions-framework-ruby/blob/main/docs/writing-functions.md) for details.
 
 ## Local development
 
