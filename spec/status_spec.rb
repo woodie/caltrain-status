@@ -23,13 +23,17 @@ RSpec.describe Status do
     let(:msg0) { "We're waiting for electrification." }
     let(:msg1) { "Train 432 SB is running 9 minutes late approaching Nirvana." }
     let(:msg2) { "SB514 boarding on the northbound platform Santa Clara." }
-    let(:msg3) { "We're done with electrification." }
+    let(:msg3) { "We're working on electrification." }
+    let(:msg4) { "We're starting with electrification." }
+    let(:recent) { Time.now - 22222 }
+    let(:past) { Time.now - 33333 }
     let(:payload) {
       {"data" => [
         {"created_at" => time, "text" => msg0},
         {"created_at" => time, "text" => msg1},
         {"created_at" => time, "text" => msg2},
-        {"created_at" => time, "text" => msg3}
+        {"created_at" => time, "text" => msg3},
+        {"created_at" => past, "text" => msg4}
       ]}.to_json
     }
     let(:response) { Net::HTTPSuccess.new(1.0, "200", "OK") }
@@ -50,7 +54,7 @@ RSpec.describe Status do
       end
 
       context "with stale messages" do
-        let(:time) { Time.now - 33333 }
+        let(:time) { past }
 
         it "should return empty string" do
           expect(subject.message(train_id)).to be_empty
@@ -58,7 +62,7 @@ RSpec.describe Status do
       end
 
       context "with recent messages" do
-        let(:time) { Time.now - 22222 }
+        let(:time) { recent }
 
         context "with just train_d in the feed" do
           let(:train_id) { "432" }

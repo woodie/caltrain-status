@@ -26,15 +26,15 @@ class Status
     fallback = ""
     combo = train_id.to_i.even? ? "SB#{train_id}" : "NB#{train_id}"
     JSON.parse(@response.body)["data"].each do |row|
-      return "" if (Time.now - Time.parse(row["created_at"])).to_i > 30000
+      return fallback if (Time.now - Time.parse(row["created_at"])).to_i > 30000
 
       parts = row["text"].split
-      if parts.size > 1 && parts[0].size > 1
-        if (parts[0] == combo) || (parts[0] == "Train" && parts[1] == train_id)
-          return row["text"]
-        elsif fallback.empty? && parts[0][1] != "B" && parts[0] != "Train"
-          fallback = row["text"]
-        end
+      next unless parts.size > 1 && parts[0].size > 1
+
+      if (parts[0] == combo) || (parts[0] == "Train" && parts[1] == train_id)
+        return row["text"]
+      elsif fallback.empty? && parts[0][1] != "B" && parts[0] != "Train"
+        fallback = row["text"]
       end
     end
     fallback
