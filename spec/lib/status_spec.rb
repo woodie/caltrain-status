@@ -1,7 +1,7 @@
 require "status"
 
 RSpec.describe Status do
-  describe "OPTS_HEADERS" do
+  describe "::OPTS_HEADERS" do
     let(:hash) { Status::OPTS_HEADERS }
 
     it "should include expected key" do
@@ -10,7 +10,7 @@ RSpec.describe Status do
     end
   end
 
-  describe "CORS_HEADERS" do
+  describe "::CORS_HEADERS" do
     let(:hash) { Status::CORS_HEADERS }
 
     it "should include expected key" do
@@ -19,7 +19,7 @@ RSpec.describe Status do
     end
   end
 
-  describe ".message" do
+  describe "#message" do
     let(:msg0) { "We're waiting for electrification." }
     let(:msg1) { "Train 432 SB is running 9 minutes late approaching Nirvana." }
     let(:msg2) { "SB514 boarding on the northbound platform Santa Clara." }
@@ -91,12 +91,9 @@ RSpec.describe Status do
     end
   end
 
-  describe ".status_tweets" do
-    let(:resp) { Net::HTTPSuccess.new(1.0, "200", "OK") }
-
-    before { expect(Net::HTTP).to receive(:get_response) }
-
+  describe "#status_tweets" do
     it "should encode query params" do
+      expect(Net::HTTP).to receive(:get_response)
       expect(URI).to receive(:encode_www_form)
       subject.send(:status_tweets)
     end

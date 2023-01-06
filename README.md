@@ -1,12 +1,18 @@
 # Caltrain status as a JSON feed
 
 Caltrain published status from Twitter on [their website](https://www.caltrain.com/alerts?active_tab=service_alerts_tab).
-It would be much more useful as a JSON. We published our JSON status [here](https://us-central1-next-caltrain-pwa.cloudfunctions.net/status).
-
+We now published a status JSON [here](https://us-central1-next-caltrain-pwa.cloudfunctions.net/status)
+that we use in our [Next Caltrain](https://github.com/woodie/next-caltrain-pwa) app.
+```
++-----------+
+| <marquee> | <- "Train 515 SB is running 10 minutes 
+|           |     late approaching Redwood City."
+| Train 514 |
+| selected  |
++-----------+
+```
 We set this up with [Functions Framework for Ruby](https://github.com/GoogleCloudPlatform/functions-framework-ruby).
 See [Writing Functions](https://github.com/GoogleCloudPlatform/functions-framework-ruby/blob/main/docs/writing-functions.md) for details.
-
-<img width="240" alt="ststua" src="https://user-images.githubusercontent.com/17495/210915930-bc3c2ba0-0e6f-42d5-8fc7-47bffbc291ff.png">
 
 ## Local development
 
