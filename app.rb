@@ -11,5 +11,5 @@ FunctionsFramework.http "status" do |request|
   message = global(:status).message(request.params["train"])
   return [500, {}, ["Something went wrong."]] if message.nil?
 
-  [200, Status::RESP_HEADERS, [{message: message}.to_json]]
+  [200, Status::CORS_HEADERS, [{message: message}.to_json]]
 end

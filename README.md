@@ -6,6 +6,8 @@ It would be much more useful as a JSON. We published our JSON status [here](http
 We set this up with [Functions Framework for Ruby](https://github.com/GoogleCloudPlatform/functions-framework-ruby).
 See [Writing Functions](https://github.com/GoogleCloudPlatform/functions-framework-ruby/blob/main/docs/writing-functions.md) for details.
 
+<img width="240" alt="ststua" src="https://user-images.githubusercontent.com/17495/210915930-bc3c2ba0-0e6f-42d5-8fc7-47bffbc291ff.png">
+
 ## Local development
 
 Create `env.sh` file to set the `BEARER_TOKEN`.

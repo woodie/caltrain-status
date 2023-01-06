@@ -10,8 +10,8 @@ RSpec.describe Status do
     end
   end
 
-  describe "RESP_HEADERS" do
-    let(:hash) { Status::RESP_HEADERS }
+  describe "CORS_HEADERS" do
+    let(:hash) { Status::CORS_HEADERS }
 
     it "should include expected key" do
       expect(hash.is_a?(Hash)).to be(true)
@@ -36,21 +36,21 @@ RSpec.describe Status do
         {"created_at" => past, "text" => msg4}
       ]}.to_json
     }
-    let(:response) { Net::HTTPSuccess.new(1.0, "200", "OK") }
+    let(:resp) { Net::HTTPSuccess.new(1.0, "200", "OK") }
     let(:train_id) { "321" }
 
-    context "with bad response" do
-      before(:each) { expect(Net::HTTP).to receive(:get_response) }
+    context "with invalid twitter response" do
+      before { expect(Net::HTTP).to receive(:get_response) }
 
       it "should return nil" do
         expect(subject.message(train_id)).to be_nil
       end
     end
 
-    context "with a valid response" do
+    context "with valid twitter response" do
       before(:each) do
-        expect(Net::HTTP).to receive(:get_response).and_return(response)
-        expect(response).to receive(:body).and_return(payload)
+        expect(Net::HTTP).to receive(:get_response).and_return(resp)
+        expect(resp).to receive(:body).and_return(payload)
       end
 
       context "with stale messages" do
@@ -64,30 +64,41 @@ RSpec.describe Status do
       context "with recent messages" do
         let(:time) { recent }
 
-        context "with just train_d in the feed" do
+        context "with just train ID in the feed" do
           let(:train_id) { "432" }
 
-          it "should return message when response" do
+          it "should return expected response" do
             expect(subject.message(train_id)).to eq(msg1)
           end
         end
 
-        context "with combo train_id in the feed" do
+        context "with train combo ID in the feed" do
           let(:train_id) { "514" }
 
-          it "should return message when response" do
+          it "should return expected response" do
             expect(subject.message(train_id)).to eq(msg2)
           end
         end
 
-        context "without train in the feed" do
+        context "without train ID in the feed" do
           let(:train_id) { "123" }
 
-          it "should return message when response" do
+          it "should return expected response" do
             expect(subject.message(train_id)).to eq(msg0)
           end
         end
       end
+    end
+  end
+
+  describe ".status_tweets" do
+    let(:resp) { Net::HTTPSuccess.new(1.0, "200", "OK") }
+
+    before { expect(Net::HTTP).to receive(:get_response) }
+
+    it "should encode query params" do
+      expect(URI).to receive(:encode_www_form)
+      subject.send(:status_tweets)
     end
   end
 end

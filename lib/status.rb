@@ -10,7 +10,7 @@ class Status
     "Access-Control-Max-Age" => "3600"
   }
 
-  RESP_HEADERS = {
+  CORS_HEADERS = {
     "Access-Control-Allow-Origin" => "*",
     "Content-type" => "application/json; charset=utf-8"
   }
@@ -31,7 +31,7 @@ class Status
       parts = row["text"].split
       next unless parts.size > 1 && parts[0].size > 1
 
-      if (parts[0] == combo) || (parts[0] == "Train" && parts[1] == train_id)
+      if parts[0] == combo || row["text"].start_with?("Train #{train_id} ")
         return row["text"]
       elsif fallback.empty? && parts[0][1] != "B" && parts[0] != "Train"
         fallback = row["text"]
