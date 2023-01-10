@@ -17,10 +17,11 @@ class Status
 
   def initialize(bearer_token = "")
     @bearer_token = bearer_token
+    @refresh_time = Time.now
   end
 
   def message(train_id)
-    @response ||= status_tweets
+    @response = status_tweets unless !@response.nil? && @refresh_time > Time.now
     return @response = nil unless @response.is_a?(Net::HTTPSuccess)
 
     fallback = ""
@@ -43,6 +44,7 @@ class Status
   private
 
   def status_tweets
+    @refresh_time = Time.now + 600 # 10 minutes
     api_params = {"max_results" => 20, "tweet.fields" => "created_at"}
     api_headers = {"Authorization" => "Bearer #{@bearer_token}"}
     uri = URI("https://api.twitter.com/2/users/919284817/tweets")

@@ -6,8 +6,9 @@ describe FunctionsFramework do
   describe ".on_startup" do
     subject { load_temporary("app.rb") { run_startup_tasks "status" } }
 
-    it "should initialize instance variable" do
+    it "should initialize instance variables" do
       expect(subject[:status].instance_variables).to include :@bearer_token
+      expect(subject[:status].instance_variables).to include :@refresh_time
     end
   end
 
