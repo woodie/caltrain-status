@@ -25,8 +25,8 @@ RSpec.describe Status do
     let(:msg2) { "SB514 boarding on the northbound platform Santa Clara." }
     let(:msg3) { "We're working on electrification." }
     let(:msg4) { "We're starting with electrification." }
-    let(:recent) { Time.now - 22222 }
-    let(:past) { Time.now - 33333 }
+    let(:recent) { Time.now - Status::STALE_SECONDS + 200 }
+    let(:past) { Time.now - Status::STALE_SECONDS - 200 }
     let(:time) { past }
     let(:payload) {
       {"data" => [

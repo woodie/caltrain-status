@@ -1,6 +1,6 @@
 require "functions_framework/testing"
 
-describe FunctionsFramework do
+RSpec.describe FunctionsFramework do
   include FunctionsFramework::Testing
 
   describe ".on_startup" do
