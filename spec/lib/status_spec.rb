@@ -119,8 +119,15 @@ RSpec.describe Status do
   end
 
   describe "#status_tweets" do
+    before(:each) { expect(Net::HTTP).to receive(:get_response) }
+
+    it "should reset refresh_time" do
+      rt = subject.instance_variable_get(:@refresh_time)
+      subject.send(:status_tweets)
+      expect(subject.instance_variable_get(:@refresh_time)).not_to eq(rt)
+    end
+
     it "should encode query params" do
-      expect(Net::HTTP).to receive(:get_response)
       expect(URI).to receive(:encode_www_form)
       subject.send(:status_tweets)
     end
