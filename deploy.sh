@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 gcloud functions deploy status \
