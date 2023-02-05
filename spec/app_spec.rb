@@ -39,7 +39,8 @@ RSpec.describe FunctionsFramework do
 
     context "with valid twitter response" do
       let(:resp) { Net::HTTPSuccess.new(1.0, "200", "OK") }
-      let(:data) { {"data" => []}.to_json }
+      # let(:data) { {"data" => []}.to_json }
+      let(:data) { '<html><body><div class="view-tweets"></div></body></html>' }
 
       before do
         expect(Net::HTTP).to receive(:get_response).and_return(resp)

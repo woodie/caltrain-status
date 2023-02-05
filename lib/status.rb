@@ -1,6 +1,7 @@
 require "time"
 require "json"
 require "net/http"
+require "nokogiri"
 
 class Status
   STALE_SECONDS = 36000 # 10 hours
@@ -24,12 +25,13 @@ class Status
   end
 
   def message(train_id)
-    @response = status_tweets unless @response && @refresh_time > Time.now
+    @response = status_page unless @response && @refresh_time > Time.now
     return @response = nil unless @response.is_a?(Net::HTTPSuccess)
 
     fallback = ""
     combo = train_id.to_i.even? ? "SB#{train_id}" : "NB#{train_id}"
-    JSON.parse(@response.body)["data"].each do |row|
+    # JSON.parse(@response.body)["data"].each do |row|
+    extract_data(@response.body)["data"].each do |row|
       return fallback if (Time.now - Time.parse(row["created_at"])).to_i > STALE_SECONDS
 
       parts = row["text"].split
@@ -53,5 +55,23 @@ class Status
     uri = URI("https://api.twitter.com/2/users/919284817/tweets")
     uri.query = URI.encode_www_form(api_params)
     Net::HTTP.get_response(uri, api_headers)
+  end
+
+  def status_page
+    @refresh_time = Time.now + REFRESH_SECONDS
+    uri = URI("https://www.caltrain.com/alerts?active_tab=service_alerts_tab")
+    Net::HTTP.get_response(uri)
+  end
+
+  def extract_data(html)
+    document = Nokogiri::HTML.parse(html)
+    payload = {"data" => []}
+    tweets = document.at(".view-tweets")
+    tweets.css(".views-row").each do |row|
+      time = row.at("time").attributes["datetime"].value
+      text = row.at("a").text
+      payload["data"] << {"created_at" => time, "text" => text}
+    end
+    payload
   end
 end

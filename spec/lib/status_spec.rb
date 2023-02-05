@@ -28,7 +28,7 @@ RSpec.describe Status do
     let(:recent) { Time.now - Status::STALE_SECONDS + 200 }
     let(:past) { Time.now - Status::STALE_SECONDS - 200 }
     let(:time) { past }
-    let(:payload) {
+    let(:json) {
       {"data" => [
         {"created_at" => time, "text" => msg0},
         {"created_at" => time, "text" => msg1},
@@ -36,6 +36,17 @@ RSpec.describe Status do
         {"created_at" => time, "text" => msg3},
         {"created_at" => past, "text" => msg4}
       ]}.to_json
+    }
+    let(:payload) {
+      <<-HTML
+      <html><body><div class="view-tweets">
+      <div class="views-row"><a>#{msg0}</a><time datetime="#{time}"></time></div>
+      <div class="views-row"><a>#{msg1}</a><time datetime="#{time}"></time></div>
+      <div class="views-row"><a>#{msg2}</a><time datetime="#{time}"></time></div>
+      <div class="views-row"><a>#{msg3}</a><time datetime="#{time}"></time></div>
+      <div class="views-row"><a>#{msg4}</a><time datetime="#{past}"></time></div>
+      </div></body></html>
+      HTML
     }
     let(:resp) { Net::HTTPSuccess.new(1.0, "200", "OK") }
     let(:train_id) { "321" }
