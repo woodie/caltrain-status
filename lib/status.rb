@@ -6,6 +6,8 @@ require "nokogiri"
 class Status
   STALE_SECONDS = 36000 # 10 hours
   REFRESH_SECONDS = 600 # 10 minutes
+  FALLBACK_TIME = Time.at(0)
+  STATUS_FILE = "/tmp/status.json"
 
   OPTS_HEADERS = {
     "Access-Control-Allow-Origin" => "*",
@@ -24,13 +26,26 @@ class Status
     @refresh_time = Time.now
   end
 
+  def check
+    response = status_page
+    return nil unless response.is_a?(Net::HTTPSuccess)
+
+    File.write(STATUS_FILE, JSON.dump({time: FALLBACK_TIME})) unless File.exist?(STATUS_FILE)
+    file_time = Time.parse(JSON.parse(File.read(STATUS_FILE))["time"])
+    feed_time = Time.parse(extract_data(response.body)["time"])
+    if file_time < feed_time
+      File.write(STATUS_FILE, JSON.dump({time: feed_time}))
+      uri = URI("https://next-caltrain-pwa.appspot.com/scrape")
+      Net::HTTP.get_response(uri).is_a?(Net::HTTPSuccess)
+    end
+  end
+
   def message(train_id)
     @response = status_page unless @response && @refresh_time > Time.now
     return @response = nil unless @response.is_a?(Net::HTTPSuccess)
 
     fallback = ""
     combo = train_id.to_i.even? ? "SB#{train_id}" : "NB#{train_id}"
-    # JSON.parse(@response.body)["data"].each do |row|
     extract_data(@response.body)["data"].each do |row|
       return fallback if (Time.now - Time.parse(row["created_at"])).to_i > STALE_SECONDS
 
@@ -48,15 +63,6 @@ class Status
 
   private
 
-  def status_tweets
-    @refresh_time = Time.now + REFRESH_SECONDS
-    api_params = {"max_results" => 20, "tweet.fields" => "created_at"}
-    api_headers = {"Authorization" => "Bearer #{@bearer_token}"}
-    uri = URI("https://api.twitter.com/2/users/919284817/tweets")
-    uri.query = URI.encode_www_form(api_params)
-    Net::HTTP.get_response(uri, api_headers)
-  end
-
   def status_page
     @refresh_time = Time.now + REFRESH_SECONDS
     uri = URI("https://www.caltrain.com/alerts?active_tab=service_alerts_tab")
@@ -65,11 +71,12 @@ class Status
 
   def extract_data(html)
     document = Nokogiri::HTML.parse(html)
-    payload = {"data" => []}
+    payload = {"data" => [], "time" => FALLBACK_TIME.to_s}
     tweets = document.at(".view-tweets")
     tweets.css(".views-row").each do |row|
       time = row.at("time").attributes["datetime"].value
       text = row.at("a").text
+      payload["time"] = time if time > payload["time"]
       payload["data"] << {"created_at" => time, "text" => text}
     end
     payload
