@@ -58,3 +58,14 @@ bundle exec standardrb --fix
 ```
 bundle exec rspec -fd
 ```
+
+# UPDATE
+
+Teitter API are no longer free so We're now scraping alerts from the Caltrain website.
+The scraping and tagging happens from the main App Engine app, writing to Datastore.
+
+This code in this repo hits the App Engine app when changes are detected.
+To avoid racking up cloud expenses, we run the check from a Raspberry Pi.
+```cron
+*/5 * * * * ~/.rbenv/bin/rbenv exec ruby ~/workspace/caltrain-status/check.rb
+```
