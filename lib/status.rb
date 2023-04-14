@@ -76,6 +76,7 @@ class Status
     tweets.css(".views-row").each do |row|
       time = row.at("time").attributes["datetime"].value
       text = row.at("a").text
+      next unless text.include?("minutes late") # ignore all but delays
       payload["time"] = time if time > payload["time"]
       payload["data"] << {"created_at" => time, "text" => text}
     end

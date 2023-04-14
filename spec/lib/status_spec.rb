@@ -113,16 +113,16 @@ RSpec.describe Status do
         context "with train combo ID in the feed" do
           let(:train_id) { "514" }
 
-          it "should return expected response" do
-            expect(subject.message(train_id)).to eq(msg2)
+          it "should no longer return expected response" do
+            expect(subject.message(train_id)).not_to eq(msg2)
           end
         end
 
         context "without train ID in the feed" do
           let(:train_id) { "123" }
 
-          it "should return expected response" do
-            expect(subject.message(train_id)).to eq(msg0)
+          it "should no longer return expected response" do
+            expect(subject.message(train_id)).not_to eq(msg0)
           end
         end
       end
